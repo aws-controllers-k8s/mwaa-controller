@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ack-mwaa-controller-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ack-mwaa-controller
+subjects:
+- kind: ServiceAccount
+  name: ack-mwaa-controller
+  namespace: ack-system

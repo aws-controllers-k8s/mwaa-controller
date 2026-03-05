@@ -1,0 +1,8 @@
+service:
+  full_name: "Amazon Managed Workflows for Apache Airflow"
+  short_name: "MWAA"
+  link: "https://aws.amazon.com/managed-workflows-for-apache-airflow/"
+  documentation: "https://docs.aws.amazon.com/mwaa/"
+api_versions:
+  - api_version: v1alpha1
+    status: planned
