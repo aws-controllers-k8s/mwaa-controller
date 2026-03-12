@@ -16,6 +16,7 @@ rules:
 - apiGroups:
   - mwaa.services.k8s.aws
   resources:
+  - environments
   verbs:
   - create
   - delete
@@ -27,6 +28,7 @@ rules:
 - apiGroups:
   - mwaa.services.k8s.aws
   resources:
+  - environments
   verbs:
   - get
   - patch

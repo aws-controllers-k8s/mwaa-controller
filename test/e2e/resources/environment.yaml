@@ -1,0 +1,19 @@
+apiVersion: mwaa.services.k8s.aws/v1alpha1
+kind: Environment
+metadata:
+  name: $ENVIRONMENT_NAME
+spec:
+  name: $ENVIRONMENT_NAME
+  executionRoleARN: $EXECUTION_ROLE_ARN
+  sourceBucketARN: $SOURCE_BUCKET_ARN
+  dagS3Path: dags
+  environmentClass: mw1.micro
+  maxWorkers: 1
+  networkConfiguration:
+    subnetIDs:
+      - $PRIVATE_SUBNET_1
+      - $PRIVATE_SUBNET_2
+    securityGroupIDs:
+      - $SECURITY_GROUP
+  webserverAccessMode: PUBLIC_ONLY
+  airflowVersion: "2.10.3"

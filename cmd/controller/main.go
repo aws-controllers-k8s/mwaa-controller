@@ -39,6 +39,8 @@ import (
 	svctypes "github.com/aws-controllers-k8s/mwaa-controller/apis/v1alpha1"
 	svcresource "github.com/aws-controllers-k8s/mwaa-controller/pkg/resource"
 
+	_ "github.com/aws-controllers-k8s/mwaa-controller/pkg/resource/environment"
+
 	"github.com/aws-controllers-k8s/mwaa-controller/pkg/version"
 )
 
