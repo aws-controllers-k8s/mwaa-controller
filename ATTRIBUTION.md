@@ -20,7 +20,9 @@ include an indication of the Open Source License under which that package is
 distributed. For any package *NOT* distributed under the terms of the Apache
 License version 2.0, we include the full text of the package's License below.
 
+* `github.com/aws-controllers-k8s/ec2-controller`
 * `github.com/aws-controllers-k8s/iam-controller`
+* `github.com/aws-controllers-k8s/kms-controller`
 * `github.com/aws-controllers-k8s/runtime`
 * `github.com/aws-controllers-k8s/s3-controller`
 * `github.com/aws/aws-sdk-go`
@@ -34,20 +36,21 @@ License version 2.0, we include the full text of the package's License below.
 * `k8s.io/client-go`
 * `sigs.k8s.io/controller-runtime`
 
-### github.com/aws-controllers-k8s/iam-controller
+### github.com/aws-controllers-k8s/ec2-controller
 
 License Identifier: Apache-2.0
 
 Subdependencies:
+* `github.com/aws-controllers-k8s/iam-controller`
 * `github.com/aws-controllers-k8s/runtime`
 * `github.com/aws/aws-sdk-go`
 * `github.com/aws/aws-sdk-go-v2`
-* `github.com/aws/aws-sdk-go-v2/service/iam`
+* `github.com/aws/aws-sdk-go-v2/service/ec2`
 * `github.com/aws/smithy-go`
 * `github.com/go-logr/logr`
-* `github.com/micahhausler/aws-iam-policy`
 * `github.com/samber/lo`
 * `github.com/spf13/pflag`
+* `github.com/stretchr/testify`
 * `k8s.io/api`
 * `k8s.io/apimachinery`
 * `k8s.io/client-go`
@@ -82,10 +85,10 @@ Subdependencies:
 * `github.com/itchyny/gojq`
 * `github.com/itchyny/timefmt-go`
 * `github.com/jaypipes/envutil`
-* `github.com/jmespath/go-jmespath`
 * `github.com/josharian/intern`
 * `github.com/json-iterator/go`
 * `github.com/mailru/easyjson`
+* `github.com/micahhausler/aws-iam-policy`
 * `github.com/modern-go/concurrent`
 * `github.com/modern-go/reflect2`
 * `github.com/munnerz/goautoneg`
@@ -122,6 +125,10 @@ Subdependencies:
 * `sigs.k8s.io/structured-merge-diff/v6`
 * `sigs.k8s.io/yaml`
 
+#### github.com/aws-controllers-k8s/iam-controller
+
+License Identifier: Apache-2.0
+
 #### github.com/aws-controllers-k8s/runtime
 
 License Identifier: Apache-2.0
@@ -134,7 +141,7 @@ License Identifier: Apache-2.0
 
 License Identifier: Apache-2.0
 
-#### github.com/aws/aws-sdk-go-v2/service/iam
+#### github.com/aws/aws-sdk-go-v2/service/ec2
 
 License Identifier: Apache-2.0
 
@@ -145,20 +152,6 @@ License Identifier: Apache-2.0
 #### github.com/go-logr/logr
 
 License Identifier: Apache-2.0
-
-#### github.com/micahhausler/aws-iam-policy
-
-License Identifier: MIT
-
-The MIT License (MIT)
-
-Copyright (c) 2023, Micah Hausler
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### github.com/samber/lo
 
@@ -218,6 +211,32 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#### github.com/stretchr/testify
+
+License Identifier: MIT
+
+MIT License
+
+Copyright (c) 2012-2020 Mat Ryer, Tyler Bunnell and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 #### k8s.io/api
 
@@ -631,10 +650,6 @@ SOFTWARE.
 
 License Identifier: Apache-2.0
 
-#### github.com/jmespath/go-jmespath
-
-License Identifier: Apache-2.0
-
 #### github.com/josharian/intern
 
 License Identifier: MIT
@@ -690,6 +705,20 @@ SOFTWARE.
 #### github.com/mailru/easyjson
 
 Copyright (c) 2016 Mail.Ru Group
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#### github.com/micahhausler/aws-iam-policy
+
+License Identifier: MIT
+
+The MIT License (MIT)
+
+Copyright (c) 2023, Micah Hausler
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -1527,6 +1556,110 @@ License Identifier: Apache-2.0
 
 
 
+### github.com/aws-controllers-k8s/kms-controller
+
+License Identifier: Apache-2.0
+
+Subdependencies:
+* `github.com/aws-controllers-k8s/runtime`
+* `github.com/aws/aws-sdk-go`
+* `github.com/aws/aws-sdk-go-v2`
+* `github.com/aws/aws-sdk-go-v2/service/kms`
+* `github.com/aws/smithy-go`
+* `github.com/go-logr/logr`
+* `github.com/spf13/pflag`
+* `github.com/stretchr/testify`
+* `k8s.io/api`
+* `k8s.io/apimachinery`
+* `k8s.io/client-go`
+* `sigs.k8s.io/controller-runtime`
+* `github.com/aws/aws-sdk-go-v2/config`
+* `github.com/aws/aws-sdk-go-v2/credentials`
+* `github.com/aws/aws-sdk-go-v2/feature/ec2/imds`
+* `github.com/aws/aws-sdk-go-v2/internal/configsources`
+* `github.com/aws/aws-sdk-go-v2/internal/endpoints/v2`
+* `github.com/aws/aws-sdk-go-v2/internal/ini`
+* `github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding`
+* `github.com/aws/aws-sdk-go-v2/service/internal/presigned-url`
+* `github.com/aws/aws-sdk-go-v2/service/sso`
+* `github.com/aws/aws-sdk-go-v2/service/ssooidc`
+* `github.com/aws/aws-sdk-go-v2/service/sts`
+* `github.com/beorn7/perks`
+* `github.com/cenkalti/backoff/v4`
+* `github.com/cespare/xxhash/v2`
+* `github.com/davecgh/go-spew`
+* `github.com/emicklei/go-restful/v3`
+* `github.com/evanphx/json-patch/v5`
+* `github.com/fsnotify/fsnotify`
+* `github.com/fxamacker/cbor/v2`
+* `github.com/go-logr/zapr`
+* `github.com/go-openapi/jsonpointer`
+* `github.com/go-openapi/jsonreference`
+* `github.com/go-openapi/swag`
+* `github.com/google/btree`
+* `github.com/google/gnostic-models`
+* `github.com/google/go-cmp`
+* `github.com/google/uuid`
+* `github.com/itchyny/gojq`
+* `github.com/itchyny/timefmt-go`
+* `github.com/jaypipes/envutil`
+* `github.com/josharian/intern`
+* `github.com/json-iterator/go`
+* `github.com/mailru/easyjson`
+* `github.com/micahhausler/aws-iam-policy`
+* `github.com/modern-go/concurrent`
+* `github.com/modern-go/reflect2`
+* `github.com/munnerz/goautoneg`
+* `github.com/pkg/errors`
+* `github.com/pmezard/go-difflib`
+* `github.com/prometheus/client_golang`
+* `github.com/prometheus/client_model`
+* `github.com/prometheus/common`
+* `github.com/prometheus/procfs`
+* `github.com/x448/float16`
+* `go.uber.org/multierr`
+* `go.uber.org/zap`
+* `go.yaml.in/yaml/v2`
+* `go.yaml.in/yaml/v3`
+* `golang.org/x/net`
+* `golang.org/x/oauth2`
+* `golang.org/x/sync`
+* `golang.org/x/sys`
+* `golang.org/x/term`
+* `golang.org/x/text`
+* `golang.org/x/time`
+* `gomodules.xyz/jsonpatch/v2`
+* `google.golang.org/protobuf`
+* `gopkg.in/evanphx/json-patch.v4`
+* `gopkg.in/inf.v0`
+* `gopkg.in/yaml.v3`
+* `k8s.io/apiextensions-apiserver`
+* `k8s.io/klog/v2`
+* `k8s.io/kube-openapi`
+* `k8s.io/utils`
+* `sigs.k8s.io/json`
+* `sigs.k8s.io/randfill`
+* `sigs.k8s.io/structured-merge-diff/v6`
+* `sigs.k8s.io/yaml`
+
+
+
+
+
+#### github.com/aws/aws-sdk-go-v2
+
+License Identifier: Apache-2.0
+
+#### github.com/aws/aws-sdk-go-v2/service/kms
+
+License Identifier: Apache-2.0
+
+#### github.com/aws/smithy-go
+
+License Identifier: Apache-2.0
+
+
+
 ### github.com/aws-controllers-k8s/s3-controller
 
 License Identifier: Apache-2.0
@@ -1644,31 +1777,7 @@ License Identifier: Apache-2.0
 
 
 
-#### github.com/stretchr/testify
 
-License Identifier: MIT
-
-MIT License
-
-Copyright (c) 2012-2020 Mat Ryer, Tyler Bunnell and contributors.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 
 
@@ -1716,6 +1825,10 @@ License Identifier: Apache-2.0
 
 Subdependencies:
 * `github.com/jmespath/go-jmespath`
+
+#### github.com/jmespath/go-jmespath
+
+License Identifier: Apache-2.0
 
 ### github.com/aws/aws-sdk-go-v2
 
