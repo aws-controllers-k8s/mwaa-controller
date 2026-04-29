@@ -52,9 +52,9 @@ func TestHandleUpdateFailed(t *testing.T) {
 	tests := []struct {
 		name          string
 		lastUpdate    *v1alpha1.LastUpdate
-		wantResource  bool   // true => expect non-nil returned resource
-		wantRequeue   bool   // true => expect *ackrequeue.RequeueNeededAfter
-		wantCondition bool   // true => expect Synced=False condition set
+		wantResource  bool // true => expect non-nil returned resource
+		wantRequeue   bool // true => expect *ackrequeue.RequeueNeededAfter
+		wantCondition bool // true => expect Synced=False condition set
 		wantMsgParts  []string
 	}{
 		{
