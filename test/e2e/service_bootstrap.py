@@ -15,22 +15,21 @@
 Creates:
 - IAM execution role (trusted by airflow.amazonaws.com and airflow-env.amazonaws.com)
 - S3 bucket for DAGs (with dags/ prefix)
-- VPC with 2 public + 2 private subnets
-- Self-referencing ingress rule on the VPC's default security group
+- VPC with 2 public + 2 private subnets and a self-referencing ingress rule
+  on the VPC's default security group
 
-MWAA-specific helpers live in acktest.bootstrapping.mwaa.
+All helpers used here are generic bootstrappers in `acktest.bootstrapping`;
+MWAA-specific behaviour is expressed through their optional parameters
+(multi-principal trust, bucket prefix pre-creation, self-referencing SG
+ingress).
 """
 
 import json
 import logging
 
 from acktest.bootstrapping import Resources, BootstrapFailureException
-from acktest.bootstrapping.iam import UserPolicies
-from acktest.bootstrapping.mwaa import (
-    MWAADAGBucket,
-    MWAAExecutionRole,
-    SelfReferencingSecurityGroupIngress,
-)
+from acktest.bootstrapping.iam import Role, UserPolicies
+from acktest.bootstrapping.s3 import Bucket
 from acktest.bootstrapping.vpc import VPC
 from e2e import bootstrap_directory
 from e2e.bootstrap_resources import BootstrapResources
@@ -102,20 +101,33 @@ def service_bootstrap() -> Resources:
         ],
     })
 
-    # MWAA needs both airflow.amazonaws.com and airflow-env.amazonaws.com to
-    # assume this role; MWAAExecutionRole writes both into the trust policy.
+    # MWAA needs both airflow.amazonaws.com (control plane) and
+    # airflow-env.amazonaws.com (data plane running on customer subnets) to
+    # assume the execution role; the trust policy must include both.
     resources = BootstrapResources(
-        ExecutionRole=MWAAExecutionRole(
+        ExecutionRole=Role(
             name_prefix="ack-mwaa-execution-role",
+            principal_service="airflow.amazonaws.com",
+            additional_service_principals=["airflow-env.amazonaws.com"],
             user_policies=UserPolicies(
                 "ack-mwaa-execution-policy", [execution_policy],
             ),
         ),
-        DAGBucket=MWAADAGBucket(name_prefix="ack-mwaa-dags"),
+        # MWAA `CreateEnvironment` validates that the DAGs prefix exists on
+        # the source bucket, so pre-create `dags/` as a zero-byte object.
+        DAGBucket=Bucket(
+            name_prefix="ack-mwaa-dags",
+            enable_versioning=True,
+            empty_objects=["dags/"],
+        ),
+        # MWAA requires the environment's security group to allow
+        # self-referencing inbound traffic between workers, schedulers, and
+        # the webserver.
         EnvironmentVPC=VPC(
             name_prefix="mwaa-vpc",
             num_public_subnet=2,
             num_private_subnet=2,
+            security_group_self_referencing_ingress=True,
         ),
     )
 
@@ -123,13 +135,6 @@ def service_bootstrap() -> Resources:
         resources.bootstrap()
     except BootstrapFailureException:
         exit(254)
-
-    # The default security group created by VPC needs a self-referencing
-    # inbound rule before MWAA will accept it. We attach this after the VPC
-    # bootstrap because it depends on the VPC's security_group.group_id.
-    SelfReferencingSecurityGroupIngress(
-        security_group_id=resources.EnvironmentVPC.security_group.group_id,
-    ).bootstrap()
 
     return resources
 
