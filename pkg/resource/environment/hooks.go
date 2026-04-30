@@ -3,6 +3,7 @@ package environment
 import (
 	"fmt"
 
+	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/mwaa/types"
@@ -12,6 +13,41 @@ import (
 )
 
 var syncTags = tags.SyncTags
+
+// customPreCompare performs field comparisons that must not log the
+// compared values. It is called from the generated newResourceDelta via
+// the delta_pre_compare hook configured in generator.yaml.
+//
+// AirflowConfigurationOptions is a map<string,string> where users commonly
+// place secrets (e.g. core.fernet_key, core.sql_alchemy_conn,
+// secrets.backend_kwargs — see also the sensitive-value handling in
+// templates/hooks/environment/sdk_read_one_post_set_output.go.tpl). The
+// ACK runtime reconciler logs delta.Differences at Info level on every
+// detected spec change (runtime/pkg/runtime/reconciler.go), which includes
+// the A/B values attached to each Difference. If the default generated
+// comparator handled this field it would leak those secrets into the
+// controller logs.
+//
+// We reproduce the generated map[string]*string comparison logic here but
+// pass nil placeholders to delta.Add so the logged Differences only show
+// the path ("Spec.AirflowConfigurationOptions"), not the values.
+// Delta.DifferentAt and Delta.DifferentExcept in
+// runtime/pkg/compare/delta.go inspect Path only — they never dereference
+// A/B — so scrubbing the values does not change control flow. The field
+// is marked compare.is_ignored in generator.yaml so the default generated
+// comparison block is omitted.
+func customPreCompare(delta *ackcompare.Delta, a, b *resource) {
+	if len(a.ko.Spec.AirflowConfigurationOptions) != len(b.ko.Spec.AirflowConfigurationOptions) {
+		delta.Add("Spec.AirflowConfigurationOptions", nil, nil)
+	} else if len(a.ko.Spec.AirflowConfigurationOptions) > 0 {
+		if !ackcompare.MapStringStringPEqual(
+			a.ko.Spec.AirflowConfigurationOptions,
+			b.ko.Spec.AirflowConfigurationOptions,
+		) {
+			delta.Add("Spec.AirflowConfigurationOptions", nil, nil)
+		}
+	}
+}
 
 // handleUpdateFailed inspects the resource's Status.LastUpdate and, if MWAA
 // reported a failed update, sets ACK.ResourceSynced=False on the resource

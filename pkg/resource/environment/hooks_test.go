@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
+	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/mwaa/types"
 	"github.com/stretchr/testify/assert"
@@ -203,4 +204,135 @@ func TestHandleUpdateFailed(t *testing.T) {
 			}
 		})
 	}
+}
+
+// newEnvWithAirflowConfig builds a *resource whose Spec.AirflowConfigurationOptions
+// is set to the supplied map. Used to test customPreCompare.
+func newEnvWithAirflowConfig(opts map[string]*string) *resource {
+	return &resource{
+		ko: &v1alpha1.Environment{
+			Spec: v1alpha1.EnvironmentSpec{
+				AirflowConfigurationOptions: opts,
+			},
+		},
+	}
+}
+
+// TestCustomPreCompare_RedactsAirflowConfigurationOptions is the most important
+// assertion in this file: it locks in that customPreCompare passes nil
+// placeholders (not the raw map values) to delta.Add. This is what prevents
+// the runtime reconciler's `rlog.Info("diff", delta.Differences)` from
+// leaking user secrets stored in Spec.AirflowConfigurationOptions into the
+// controller logs. A future regeneration must never silently reintroduce the
+// raw values.
+func TestCustomPreCompare_RedactsAirflowConfigurationOptions(t *testing.T) {
+	tests := []struct {
+		name         string
+		a            map[string]*string
+		b            map[string]*string
+		wantDiff     bool
+		wantDiffPath string
+	}{
+		{
+			name:     "both nil => no diff",
+			a:        nil,
+			b:        nil,
+			wantDiff: false,
+		},
+		{
+			name:     "both empty => no diff",
+			a:        map[string]*string{},
+			b:        map[string]*string{},
+			wantDiff: false,
+		},
+		{
+			name:     "nil vs empty => no diff (len == len)",
+			a:        nil,
+			b:        map[string]*string{},
+			wantDiff: false,
+		},
+		{
+			name:     "equal maps => no diff",
+			a:        map[string]*string{"core.fernet_key": ptr("SECRET_A"), "core.dag_concurrency": ptr("16")},
+			b:        map[string]*string{"core.fernet_key": ptr("SECRET_A"), "core.dag_concurrency": ptr("16")},
+			wantDiff: false,
+		},
+		{
+			name:         "different length => diff at Spec.AirflowConfigurationOptions",
+			a:            map[string]*string{"core.fernet_key": ptr("SECRET_A")},
+			b:            map[string]*string{"core.fernet_key": ptr("SECRET_A"), "core.dag_concurrency": ptr("16")},
+			wantDiff:     true,
+			wantDiffPath: "Spec.AirflowConfigurationOptions",
+		},
+		{
+			name:         "same length, different values => diff at Spec.AirflowConfigurationOptions",
+			a:            map[string]*string{"core.fernet_key": ptr("SECRET_OLD")},
+			b:            map[string]*string{"core.fernet_key": ptr("SECRET_NEW")},
+			wantDiff:     true,
+			wantDiffPath: "Spec.AirflowConfigurationOptions",
+		},
+		{
+			name:         "same length, different keys => diff at Spec.AirflowConfigurationOptions",
+			a:            map[string]*string{"core.fernet_key": ptr("x")},
+			b:            map[string]*string{"core.dag_concurrency": ptr("x")},
+			wantDiff:     true,
+			wantDiffPath: "Spec.AirflowConfigurationOptions",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := newEnvWithAirflowConfig(tt.a)
+			b := newEnvWithAirflowConfig(tt.b)
+			delta := ackcompare.NewDelta()
+
+			customPreCompare(delta, a, b)
+
+			if !tt.wantDiff {
+				assert.Empty(t, delta.Differences,
+					"expected customPreCompare to add no differences, got %d", len(delta.Differences))
+				return
+			}
+
+			// Exactly one diff should be added for AirflowConfigurationOptions.
+			if !assert.Len(t, delta.Differences, 1, "expected exactly one difference") {
+				return
+			}
+			d := delta.Differences[0]
+
+			// The diff must identify the path so reconciler routing
+			// (Delta.DifferentAt / DifferentExcept) still works.
+			assert.True(t, d.Path.Contains(tt.wantDiffPath),
+				"expected diff path to contain %q", tt.wantDiffPath)
+			assert.True(t, delta.DifferentAt(tt.wantDiffPath),
+				"expected Delta.DifferentAt(%q) == true", tt.wantDiffPath)
+
+			// The redaction guarantee: A and B must be nil so the runtime
+			// reconciler cannot log the underlying map values.
+			assert.Nil(t, d.A, "expected Difference.A to be nil (redacted), got %#v", d.A)
+			assert.Nil(t, d.B, "expected Difference.B to be nil (redacted), got %#v", d.B)
+		})
+	}
+}
+
+// TestCustomPreCompare_PreservesControlFlow verifies that even with scrubbed
+// A/B values, the path-based helpers Delta.DifferentAt and Delta.DifferentExcept
+// continue to function. These helpers are what reconciler.go uses to decide
+// whether to call Update, so this is the behavioral guarantee that the
+// redaction does not change control flow.
+func TestCustomPreCompare_PreservesControlFlow(t *testing.T) {
+	a := newEnvWithAirflowConfig(map[string]*string{"core.fernet_key": ptr("old")})
+	b := newEnvWithAirflowConfig(map[string]*string{"core.fernet_key": ptr("new")})
+	delta := ackcompare.NewDelta()
+
+	customPreCompare(delta, a, b)
+
+	assert.True(t, delta.DifferentAt("Spec.AirflowConfigurationOptions"),
+		"expected reconciler to observe a diff at Spec.AirflowConfigurationOptions")
+	assert.True(t, delta.DifferentAt("Spec"),
+		"expected Delta.DifferentAt(\"Spec\") == true (reconciler's update trigger)")
+	// DifferentExcept("Spec.AirflowConfigurationOptions") should be false:
+	// the only diff is the scrubbed one, nothing else.
+	assert.False(t, delta.DifferentExcept("Spec.AirflowConfigurationOptions"),
+		"expected no diffs other than Spec.AirflowConfigurationOptions")
 }

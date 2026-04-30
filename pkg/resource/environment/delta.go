@@ -41,14 +41,8 @@ func newResourceDelta(
 		delta.Add("", a, b)
 		return delta
 	}
+	customPreCompare(delta, a, b)
 
-	if len(a.ko.Spec.AirflowConfigurationOptions) != len(b.ko.Spec.AirflowConfigurationOptions) {
-		delta.Add("Spec.AirflowConfigurationOptions", a.ko.Spec.AirflowConfigurationOptions, b.ko.Spec.AirflowConfigurationOptions)
-	} else if len(a.ko.Spec.AirflowConfigurationOptions) > 0 {
-		if !ackcompare.MapStringStringPEqual(a.ko.Spec.AirflowConfigurationOptions, b.ko.Spec.AirflowConfigurationOptions) {
-			delta.Add("Spec.AirflowConfigurationOptions", a.ko.Spec.AirflowConfigurationOptions, b.ko.Spec.AirflowConfigurationOptions)
-		}
-	}
 	if ackcompare.HasNilDifference(a.ko.Spec.AirflowVersion, b.ko.Spec.AirflowVersion) {
 		delta.Add("Spec.AirflowVersion", a.ko.Spec.AirflowVersion, b.ko.Spec.AirflowVersion)
 	} else if a.ko.Spec.AirflowVersion != nil && b.ko.Spec.AirflowVersion != nil {

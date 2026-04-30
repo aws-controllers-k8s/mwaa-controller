@@ -18,6 +18,15 @@ resources:
       Name:
         is_primary_key: true
         is_immutable: true
+      # AirflowConfigurationOptions commonly carries secrets like
+      # core.fernet_key, core.sql_alchemy_conn, and secrets.backend_kwargs.
+      # Skip the default generated comparator (which would pass the raw
+      # values to delta.Add and leak them into controller logs) and handle
+      # this field in a custom delta_pre_compare hook that passes nil
+      # placeholders to delta.Add instead. See pkg/resource/environment/hooks.go.
+      AirflowConfigurationOptions:
+        compare:
+          is_ignored: true
       Status:
         is_read_only: true
         from:
@@ -89,6 +98,8 @@ resources:
       WebserverAccessMode:
         late_initialize: {}
     hooks:
+      delta_pre_compare:
+        code: customPreCompare(delta, a, b)
       sdk_read_one_post_set_output:
         template_path: hooks/environment/sdk_read_one_post_set_output.go.tpl
       sdk_update_pre_build_request:
