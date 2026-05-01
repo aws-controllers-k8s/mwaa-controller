@@ -1,0 +1,31 @@
+# This configuration is a placeholder. Replace any values with relevant values for your
+# service controller project.
+---
+annotations:
+  capabilityLevel: Basic Install
+  shortDescription:
+    Amazon Managed Workflows for Apache Airflow controller is a service controller for managing Amazon Managed Workflows for Apache Airflow resources
+    in Kubernetes
+displayName: AWS Controllers for Kubernetes - Amazon Managed Workflows for Apache Airflow
+description: |-
+  Manage Amazon Managed Workflows for Apache Airflow resources in AWS from within your Kubernetes cluster.
+
+
+  **About Amazon Managed Workflows for Apache Airflow**
+
+  Use Amazon Managed Workflows for Apache Airflow, a managed service for Apache Airflow, to set up and run data pipelines in the cloud at scale. Apache Airflow is an open-source tool used to create, schedule, and monitor workflows.
+
+  **About the AWS Controllers for Kubernetes**
+
+
+  This controller is a component of the [AWS Controller for Kubernetes](https://github.com/aws/aws-controllers-k8s)
+  project. This project is currently in **developer preview**.
+samples:
+  - kind: Environment
+    spec: "{}"
+maintainers:
+  - name: "mwaa maintainer team"
+    email: "ack-maintainers@amazon.com"
+links:
+  - name: Amazon Managed Workflows for Apache Airflow Developer Resources
+    url: https://docs.aws.amazon.com/mwaa/latest/userguide/what-is-mwaa.html
