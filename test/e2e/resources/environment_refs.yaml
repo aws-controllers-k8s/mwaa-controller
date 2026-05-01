@@ -1,0 +1,48 @@
+# Example: MWAA Environment using ACK resource references.
+#
+# This fixture demonstrates that NetworkConfiguration.subnetIDs,
+# NetworkConfiguration.securityGroupIDs, kmsKey, executionRoleARN, and
+# sourceBucketARN can each be replaced with a *Ref pointing at another
+# ACK-managed resource in the same cluster. The mwaa-controller resolves
+# these references at reconcile time by reading the referenced CR's status.
+#
+# Prerequisites for running this fixture against a real cluster:
+#   - ec2-controller installed (for Subnet and SecurityGroup CRs)
+#   - iam-controller installed (for Role CRs)
+#   - kms-controller installed (for Key CRs)
+#   - s3-controller installed (for Bucket CRs)
+#   - The referenced CRs must exist in the same namespace and be synced
+#     (ACK.ResourceSynced=True) before this Environment will reconcile.
+#
+# Not exercised by the default e2e suite because the CI image installs only
+# the mwaa-controller. Kept here as executable documentation for users who
+# prefer the declarative reference pattern over raw AWS IDs.
+apiVersion: mwaa.services.k8s.aws/v1alpha1
+kind: Environment
+metadata:
+  name: $ENVIRONMENT_NAME
+spec:
+  name: $ENVIRONMENT_NAME
+  executionRoleRef:
+    from:
+      name: $EXECUTION_ROLE_REF_NAME
+  sourceBucketRef:
+    from:
+      name: $SOURCE_BUCKET_REF_NAME
+  kmsKeyRef:
+    from:
+      name: $KMS_KEY_REF_NAME
+  dagS3Path: dags
+  environmentClass: mw1.micro
+  maxWorkers: 1
+  networkConfiguration:
+    subnetRefs:
+      - from:
+          name: $PRIVATE_SUBNET_1_REF_NAME
+      - from:
+          name: $PRIVATE_SUBNET_2_REF_NAME
+    securityGroupRefs:
+      - from:
+          name: $SECURITY_GROUP_REF_NAME
+  webserverAccessMode: PUBLIC_ONLY
+  airflowVersion: "2.10.3"

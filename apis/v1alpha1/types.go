@@ -27,3 +27,153 @@ var (
 	_ = &aws.JSONValue{}
 	_ = ackv1alpha1.AWSAccountID("")
 )
+
+// Internal only. Represents the dimensions of a metric. To learn more about
+// the metrics published to Amazon CloudWatch, see Amazon MWAA performance metrics
+// in Amazon CloudWatch (https://docs.aws.amazon.com/mwaa/latest/userguide/cw-metrics.html).
+type Dimension struct {
+	Name  *string `json:"name,omitempty"`
+	Value *string `json:"value,omitempty"`
+}
+
+// Describes an Amazon Managed Workflows for Apache Airflow (MWAA) environment.
+type Environment_SDK struct {
+	AirflowConfigurationOptions map[string]*string `json:"airflowConfigurationOptions,omitempty"`
+	AirflowVersion              *string            `json:"airflowVersion,omitempty"`
+	ARN                         *string            `json:"arn,omitempty"`
+	CeleryExecutorQueue         *string            `json:"celeryExecutorQueue,omitempty"`
+	CreatedAt                   *metav1.Time       `json:"createdAt,omitempty"`
+	DagS3Path                   *string            `json:"dagS3Path,omitempty"`
+	DatabaseVPCEndpointService  *string            `json:"databaseVPCEndpointService,omitempty"`
+	EndpointManagement          *string            `json:"endpointManagement,omitempty"`
+	EnvironmentClass            *string            `json:"environmentClass,omitempty"`
+	ExecutionRoleARN            *string            `json:"executionRoleARN,omitempty"`
+	KMSKey                      *string            `json:"kmsKey,omitempty"`
+	// Describes the status of the last update on the environment, and any errors
+	// that were encountered.
+	LastUpdate *LastUpdate `json:"lastUpdate,omitempty"`
+	// Describes the Apache Airflow log types that are published to CloudWatch Logs.
+	LoggingConfiguration *LoggingConfiguration `json:"loggingConfiguration,omitempty"`
+	MaxWebservers        *int64                `json:"maxWebservers,omitempty"`
+	MaxWorkers           *int64                `json:"maxWorkers,omitempty"`
+	MinWebservers        *int64                `json:"minWebservers,omitempty"`
+	MinWorkers           *int64                `json:"minWorkers,omitempty"`
+	Name                 *string               `json:"name,omitempty"`
+	// Describes the VPC networking components used to secure and enable network
+	// traffic between the Amazon Web Services resources for your environment. For
+	// more information, see About networking on Amazon MWAA (https://docs.aws.amazon.com/mwaa/latest/userguide/networking-about.html).
+	NetworkConfiguration         *NetworkConfiguration `json:"networkConfiguration,omitempty"`
+	PluginsS3ObjectVersion       *string               `json:"pluginsS3ObjectVersion,omitempty"`
+	PluginsS3Path                *string               `json:"pluginsS3Path,omitempty"`
+	RequirementsS3ObjectVersion  *string               `json:"requirementsS3ObjectVersion,omitempty"`
+	RequirementsS3Path           *string               `json:"requirementsS3Path,omitempty"`
+	Schedulers                   *int64                `json:"schedulers,omitempty"`
+	ServiceRoleARN               *string               `json:"serviceRoleARN,omitempty"`
+	SourceBucketARN              *string               `json:"sourceBucketARN,omitempty"`
+	StartupScriptS3ObjectVersion *string               `json:"startupScriptS3ObjectVersion,omitempty"`
+	StartupScriptS3Path          *string               `json:"startupScriptS3Path,omitempty"`
+	Status                       *string               `json:"status,omitempty"`
+	Tags                         map[string]*string    `json:"tags,omitempty"`
+	WebserverAccessMode          *string               `json:"webserverAccessMode,omitempty"`
+	WebserverURL                 *string               `json:"webserverURL,omitempty"`
+	WebserverVPCEndpointService  *string               `json:"webserverVPCEndpointService,omitempty"`
+	WeeklyMaintenanceWindowStart *string               `json:"weeklyMaintenanceWindowStart,omitempty"`
+}
+
+// Describes the status of the last update on the environment, and any errors
+// that were encountered.
+type LastUpdate struct {
+	CreatedAt *metav1.Time `json:"createdAt,omitempty"`
+	// Describes the error(s) encountered with the last update of the environment.
+	Error                     *UpdateError `json:"error,omitempty"`
+	Source                    *string      `json:"source,omitempty"`
+	Status                    *string      `json:"status,omitempty"`
+	WorkerReplacementStrategy *string      `json:"workerReplacementStrategy,omitempty"`
+}
+
+// Describes the Apache Airflow log types that are published to CloudWatch Logs.
+type LoggingConfiguration struct {
+	// Describes the Apache Airflow log details for the log type (e.g. DagProcessingLogs).
+	DagProcessingLogs *ModuleLoggingConfiguration `json:"dagProcessingLogs,omitempty"`
+	// Describes the Apache Airflow log details for the log type (e.g. DagProcessingLogs).
+	SchedulerLogs *ModuleLoggingConfiguration `json:"schedulerLogs,omitempty"`
+	// Describes the Apache Airflow log details for the log type (e.g. DagProcessingLogs).
+	TaskLogs *ModuleLoggingConfiguration `json:"taskLogs,omitempty"`
+	// Describes the Apache Airflow log details for the log type (e.g. DagProcessingLogs).
+	WebserverLogs *ModuleLoggingConfiguration `json:"webserverLogs,omitempty"`
+	// Describes the Apache Airflow log details for the log type (e.g. DagProcessingLogs).
+	WorkerLogs *ModuleLoggingConfiguration `json:"workerLogs,omitempty"`
+}
+
+// Defines the Apache Airflow log types to send to CloudWatch Logs.
+type LoggingConfigurationInput struct {
+	// Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines
+	// the log level to send to CloudWatch Logs (e.g. INFO).
+	DagProcessingLogs *ModuleLoggingConfigurationInput `json:"dagProcessingLogs,omitempty"`
+	// Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines
+	// the log level to send to CloudWatch Logs (e.g. INFO).
+	SchedulerLogs *ModuleLoggingConfigurationInput `json:"schedulerLogs,omitempty"`
+	// Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines
+	// the log level to send to CloudWatch Logs (e.g. INFO).
+	TaskLogs *ModuleLoggingConfigurationInput `json:"taskLogs,omitempty"`
+	// Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines
+	// the log level to send to CloudWatch Logs (e.g. INFO).
+	WebserverLogs *ModuleLoggingConfigurationInput `json:"webserverLogs,omitempty"`
+	// Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines
+	// the log level to send to CloudWatch Logs (e.g. INFO).
+	WorkerLogs *ModuleLoggingConfigurationInput `json:"workerLogs,omitempty"`
+}
+
+// Internal only. Collects Apache Airflow metrics. To learn more about the metrics
+// published to Amazon CloudWatch, see Amazon MWAA performance metrics in Amazon
+// CloudWatch (https://docs.aws.amazon.com/mwaa/latest/userguide/cw-metrics.html).
+type MetricDatum struct {
+	MetricName *string `json:"metricName,omitempty"`
+}
+
+// Describes the Apache Airflow log details for the log type (e.g. DagProcessingLogs).
+type ModuleLoggingConfiguration struct {
+	CloudWatchLogGroupARN *string `json:"cloudWatchLogGroupARN,omitempty"`
+	Enabled               *bool   `json:"enabled,omitempty"`
+	LogLevel              *string `json:"logLevel,omitempty"`
+}
+
+// Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines
+// the log level to send to CloudWatch Logs (e.g. INFO).
+type ModuleLoggingConfigurationInput struct {
+	Enabled  *bool   `json:"enabled,omitempty"`
+	LogLevel *string `json:"logLevel,omitempty"`
+}
+
+// Describes the VPC networking components used to secure and enable network
+// traffic between the Amazon Web Services resources for your environment. For
+// more information, see About networking on Amazon MWAA (https://docs.aws.amazon.com/mwaa/latest/userguide/networking-about.html).
+type NetworkConfiguration struct {
+	SecurityGroupIDs []*string `json:"securityGroupIDs,omitempty"`
+	// Reference field for SecurityGroupIDs
+	SecurityGroupRefs []*ackv1alpha1.AWSResourceReferenceWrapper `json:"securityGroupRefs,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="Value is immutable once set"
+	SubnetIDs []*string `json:"subnetIDs,omitempty"`
+	// Reference field for SubnetIDs
+	SubnetRefs []*ackv1alpha1.AWSResourceReferenceWrapper `json:"subnetRefs,omitempty"`
+}
+
+// Internal only. Represents a set of statistics that describe a specific metric.
+// To learn more about the metrics published to Amazon CloudWatch, see Amazon
+// MWAA performance metrics in Amazon CloudWatch (https://docs.aws.amazon.com/mwaa/latest/userguide/cw-metrics.html).
+type StatisticSet struct {
+	SampleCount *int64 `json:"sampleCount,omitempty"`
+}
+
+// Describes the error(s) encountered with the last update of the environment.
+type UpdateError struct {
+	ErrorCode    *string `json:"errorCode,omitempty"`
+	ErrorMessage *string `json:"errorMessage,omitempty"`
+}
+
+// Defines the VPC networking components used to secure and enable network traffic
+// between the Amazon Web Services resources for your environment. For more
+// information, see About networking on Amazon MWAA (https://docs.aws.amazon.com/mwaa/latest/userguide/networking-about.html).
+type UpdateNetworkConfigurationInput struct {
+	SecurityGroupIDs []*string `json:"securityGroupIDs,omitempty"`
+}

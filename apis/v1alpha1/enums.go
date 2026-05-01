@@ -22,21 +22,21 @@ const (
 	EndpointManagement_SERVICE  EndpointManagement = "SERVICE"
 )
 
-type EnvironmentStatus string
+type EnvironmentStatus_SDK string
 
 const (
-	EnvironmentStatus_CREATING          EnvironmentStatus = "CREATING"
-	EnvironmentStatus_CREATE_FAILED     EnvironmentStatus = "CREATE_FAILED"
-	EnvironmentStatus_AVAILABLE         EnvironmentStatus = "AVAILABLE"
-	EnvironmentStatus_UPDATING          EnvironmentStatus = "UPDATING"
-	EnvironmentStatus_DELETING          EnvironmentStatus = "DELETING"
-	EnvironmentStatus_DELETED           EnvironmentStatus = "DELETED"
-	EnvironmentStatus_UNAVAILABLE       EnvironmentStatus = "UNAVAILABLE"
-	EnvironmentStatus_UPDATE_FAILED     EnvironmentStatus = "UPDATE_FAILED"
-	EnvironmentStatus_ROLLING_BACK      EnvironmentStatus = "ROLLING_BACK"
-	EnvironmentStatus_CREATING_SNAPSHOT EnvironmentStatus = "CREATING_SNAPSHOT"
-	EnvironmentStatus_PENDING           EnvironmentStatus = "PENDING"
-	EnvironmentStatus_MAINTENANCE       EnvironmentStatus = "MAINTENANCE"
+	EnvironmentStatus_SDK_CREATING          EnvironmentStatus_SDK = "CREATING"
+	EnvironmentStatus_SDK_CREATE_FAILED     EnvironmentStatus_SDK = "CREATE_FAILED"
+	EnvironmentStatus_SDK_AVAILABLE         EnvironmentStatus_SDK = "AVAILABLE"
+	EnvironmentStatus_SDK_UPDATING          EnvironmentStatus_SDK = "UPDATING"
+	EnvironmentStatus_SDK_DELETING          EnvironmentStatus_SDK = "DELETING"
+	EnvironmentStatus_SDK_DELETED           EnvironmentStatus_SDK = "DELETED"
+	EnvironmentStatus_SDK_UNAVAILABLE       EnvironmentStatus_SDK = "UNAVAILABLE"
+	EnvironmentStatus_SDK_UPDATE_FAILED     EnvironmentStatus_SDK = "UPDATE_FAILED"
+	EnvironmentStatus_SDK_ROLLING_BACK      EnvironmentStatus_SDK = "ROLLING_BACK"
+	EnvironmentStatus_SDK_CREATING_SNAPSHOT EnvironmentStatus_SDK = "CREATING_SNAPSHOT"
+	EnvironmentStatus_SDK_PENDING           EnvironmentStatus_SDK = "PENDING"
+	EnvironmentStatus_SDK_MAINTENANCE       EnvironmentStatus_SDK = "MAINTENANCE"
 )
 
 type LoggingLevel string
@@ -104,4 +104,11 @@ type WebserverAccessMode string
 const (
 	WebserverAccessMode_PRIVATE_ONLY WebserverAccessMode = "PRIVATE_ONLY"
 	WebserverAccessMode_PUBLIC_ONLY  WebserverAccessMode = "PUBLIC_ONLY"
+)
+
+type WorkerReplacementStrategy string
+
+const (
+	WorkerReplacementStrategy_FORCED   WorkerReplacementStrategy = "FORCED"
+	WorkerReplacementStrategy_GRACEFUL WorkerReplacementStrategy = "GRACEFUL"
 )
