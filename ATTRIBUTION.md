@@ -25,7 +25,6 @@ License version 2.0, we include the full text of the package's License below.
 * `github.com/aws-controllers-k8s/kms-controller`
 * `github.com/aws-controllers-k8s/runtime`
 * `github.com/aws-controllers-k8s/s3-controller`
-* `github.com/aws/aws-sdk-go`
 * `github.com/aws/aws-sdk-go-v2`
 * `github.com/aws/aws-sdk-go-v2/service/mwaa`
 * `github.com/aws/smithy-go`
@@ -2071,17 +2070,6 @@ License Identifier: Apache-2.0
 
 
 #### github.com/aws/aws-sdk-go-v2/service/internal/s3shared
-
-License Identifier: Apache-2.0
-
-### github.com/aws/aws-sdk-go
-
-License Identifier: Apache-2.0
-
-Subdependencies:
-* `github.com/jmespath/go-jmespath`
-
-#### github.com/jmespath/go-jmespath
 
 License Identifier: Apache-2.0
 
