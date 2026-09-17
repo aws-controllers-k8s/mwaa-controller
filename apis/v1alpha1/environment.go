@@ -152,11 +152,11 @@ type EnvironmentSpec struct {
 	// The number of Apache Airflow schedulers to run in your environment. Valid
 	// values:
 	//
-	//   - v2 - For environments larger than mw1.micro, accepts values from 2 to
-	//     5. Defaults to 2 for all environment sizes except mw1.micro, which defaults
-	//     to 1.
+	//    * v2 - For environments larger than mw1.micro, accepts values from 2 to
+	//    5. Defaults to 2 for all environment sizes except mw1.micro, which defaults
+	//    to 1.
 	//
-	//   - v1 - Accepts 1.
+	//    * v1 - Accepts 1.
 	Schedulers *int64 `json:"schedulers,omitempty"`
 	// The Amazon Resource Name (ARN) of the Amazon S3 bucket where your DAG code
 	// and supporting files are stored. For example, arn:aws:s3:::my-airflow-bucket-unique-name.
